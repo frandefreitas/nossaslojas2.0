@@ -8,7 +8,7 @@ import db from "./config/db.json";
 export class DatabaseProject{
 
 
-    insertEstado(body:any):void {
+    insertEstado(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -28,16 +28,15 @@ export class DatabaseProject{
             return connection.manager
                 .save(estado)
                 .then(estado => {
-                    console.log("Estado criado",estado.id);
+                    res.status(200).send(estado);
                 })
-                .catch(err => console.log(err));
         }).catch(error => console.log(error));
 
         
     }
 
 
-    insertLoja(body:any):void {
+    insertLoja(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -61,14 +60,13 @@ export class DatabaseProject{
             return connection.manager
                 .save(loja)
                 .then(loja => {
-                    console.log("Loja criado",loja.id);
+                    res.status(200).send(loja);
                 })
-                .catch(err => console.log(err));
         }).catch(error => console.log(error));
     }    
 
 
-    insertCidade(body:any):void {
+    insertCidade(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -84,20 +82,24 @@ export class DatabaseProject{
             let cidade = new Cidade();
             cidade.nome = body.nome;
             cidade.idEstado = body.idEstado;
-            
-            
             return connection.manager
                 .save(cidade)
                 .then(cidade => {
-                    console.log("Loja criado",cidade.id);
+                    res.status(200).send(cidade);
                 })
-                .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 
 
 
-    updateEstado(body:any):void {
+    updateEstado(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -120,12 +122,19 @@ export class DatabaseProject{
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 
 
 
-    updateCidade(body:any):void {
+    updateCidade(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -147,12 +156,19 @@ export class DatabaseProject{
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 
 
 
-    updateLoja(body:any):void {
+    updateLoja(body:any, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -178,12 +194,19 @@ export class DatabaseProject{
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 
 
 
-    deleteLoja(id:number):void {
+    deleteLoja(id:number, res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -203,11 +226,18 @@ export class DatabaseProject{
                 .where("id = :id", { id: id })
                 .execute()
                 .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 
 
-    listaLojas():void {
+    listaLojas(res:any):void {
         createConnection({
             type: "mysql",
             host: db.host,
@@ -226,7 +256,14 @@ export class DatabaseProject{
                                 .from(Loja, "loja")
                                 .execute()
                                 .catch(err => console.log(err));
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }
 }
 

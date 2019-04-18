@@ -21,7 +21,7 @@ module.exports = function(app){
       }
       console.log('Coletando lojas');
       var connection = new app.src.DatabaseProject();
-      connection.insertLoja(loja);
+      connection.insertLoja(loja, res);
     });
 
 
@@ -29,7 +29,7 @@ module.exports = function(app){
 
     app.get('/lojas/loja/', function(req, res){
       var connection = new app.src.DatabaseProject();
-      connection.listaLojas();   
+      connection.listaLojas(res);   
       // resultado(function(erro, resultado){  
       //     if(erro){
       //         console.log('erro ao consultar no banco: ' + erro);
@@ -50,7 +50,7 @@ module.exports = function(app){
         var estado = req.body;
         console.log('Coletando estado');
         var connection = new app.src.DatabaseProject();
-        connection.insertEstado(estado);
+        connection.insertEstado(estado, res);
     });
 
 
@@ -59,7 +59,7 @@ module.exports = function(app){
       console.log('Coletando cidade');
       console.log(cidade.nome + cidade.idEstado)
       var connection = new app.src.DatabaseProject();
-      connection.insertCidade(cidade);
+      connection.insertCidade(cidade, res);
     });
 
 
@@ -69,7 +69,7 @@ module.exports = function(app){
       var id = req.params.id;
       estado.id = id;
       var connection = new app.src.DatabaseProject();
-      connection.updateEstado(estado);
+      connection.updateEstado(estado, res);
     });
 
 
@@ -79,7 +79,7 @@ module.exports = function(app){
       var id = req.params.id;
       cidade.id = id;
       var connection = new app.src.DatabaseProject();
-      connection.updateCidade(cidade);
+      connection.updateCidade(cidade, res);
     });
 
 
@@ -100,7 +100,7 @@ module.exports = function(app){
       loja.id = id;
       console.log('Coletando lojas');
       var connection = new app.src.DatabaseProject();
-      connection.updateLoja(loja);
+      connection.updateLoja(loja, res);
     });
 
 
@@ -108,7 +108,7 @@ module.exports = function(app){
     app.delete('/lojas/loja/:id', function(req, res){
         var id = req.params.id;
         var connection = new app.src.DatabaseProject();
-        connection.deleteLoja(id);
+        connection.deleteLoja(id, res);
     });
 
 

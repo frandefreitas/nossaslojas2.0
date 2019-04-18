@@ -18,7 +18,7 @@ const Loja_1 = require("./entity/Loja");
 const Cidade_1 = require("./entity/Cidade");
 const db_json_1 = __importDefault(require("./config/db.json"));
 class DatabaseProject {
-    insertEstado(body) {
+    insertEstado(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -37,12 +37,11 @@ class DatabaseProject {
             return connection.manager
                 .save(estado)
                 .then(estado => {
-                console.log("Estado criado", estado.id);
-            })
-                .catch(err => console.log(err));
+                res.status(200).send(estado);
+            });
         })).catch(error => console.log(error));
     }
-    insertLoja(body) {
+    insertLoja(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -64,12 +63,11 @@ class DatabaseProject {
             return connection.manager
                 .save(loja)
                 .then(loja => {
-                console.log("Loja criado", loja.id);
-            })
-                .catch(err => console.log(err));
+                res.status(200).send(loja);
+            });
         })).catch(error => console.log(error));
     }
-    insertCidade(body) {
+    insertCidade(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -88,12 +86,18 @@ class DatabaseProject {
             return connection.manager
                 .save(cidade)
                 .then(cidade => {
-                console.log("Loja criado", cidade.id);
-            })
-                .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+                res.status(200).send(cidade);
+            });
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
-    updateEstado(body) {
+    updateEstado(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -116,9 +120,16 @@ class DatabaseProject {
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
-    updateCidade(body) {
+    updateCidade(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -140,9 +151,16 @@ class DatabaseProject {
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
-    updateLoja(body) {
+    updateLoja(body, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -168,9 +186,16 @@ class DatabaseProject {
                 .where("id = :id", { id: body.id })
                 .execute()
                 .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
-    deleteLoja(id) {
+    deleteLoja(id, res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -190,9 +215,16 @@ class DatabaseProject {
                 .where("id = :id", { id: id })
                 .execute()
                 .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
-    listaLojas() {
+    listaLojas(res) {
         typeorm_1.createConnection({
             type: "mysql",
             host: db_json_1.default.host,
@@ -211,7 +243,14 @@ class DatabaseProject {
                 .from(Loja_1.Loja, "loja")
                 .execute()
                 .catch(err => console.log(err));
-        })).catch(error => console.log(error));
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
     }
 }
 exports.DatabaseProject = DatabaseProject;
