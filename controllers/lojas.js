@@ -17,6 +17,16 @@ module.exports = function(app){
       connection.buscaPorEstado(estado, res);
     });
 
+
+    app.get('/lojas/loja/estado/nome/:estado', function(req, res){
+      var estado = req.params.estado;
+      while (estado.indexOf('+') > -1) {  
+          estado = estado.replace('+', ' ');
+      }  
+      let connection = new app.src.DatabaseProject();
+      connection.buscaPorNomeEstado(estado, res);
+    });
+
     app.get('/lojas/loja/estado/cidade/:cidade', function(req, res){
       var cidade = req.params.cidade;
       let connection = new app.src.DatabaseProject();

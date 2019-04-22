@@ -268,6 +268,36 @@ export class DatabaseProject{
     }
 
 
+
+
+    buscaPorNomeEstado(nome:string, res:any) {
+        connection.then(async connection => {
+                let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
+                                            .innerJoin("loja.cidade", "cidade")
+                                            .innerJoin("cidade.estado", "estado")
+                                            .where("estado.nome = :nome", { nome: nome })
+                                            .getMany();
+                                        
+                                            
+                if(lojasEstado){
+                    console.log(JSON.stringify(lojasEstado));
+                    res.send(lojasEstado)
+                } else{
+                    res.send("Nenhuma loja encontrada")
+                }
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+
+
     buscaPorCidade(id:any, res:any) {
         connection.then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
