@@ -19,8 +19,7 @@ export class Loja{
     @Column()
     horario: string; 
 
-    // @ManyToOne(type => Cidade, idCidade => idCidade.id)
-    // @JoinColumn()
-    @Column()
-    idCidade: number;
+    @ManyToOne(type => Cidade, idCidade => idCidade.id)
+    @JoinColumn({name: "idCidade"})
+    cidade: Cidade;
 }

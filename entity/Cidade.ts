@@ -10,8 +10,7 @@ export class Cidade{
     @Column()
     nome: string;
 
-    // @ManyToOne(type => Estado)
-    // @JoinColumn({ referencedColumnName: "id" })
-    @Column()
-    idEstado: number;
+    @ManyToOne(type => Estado, idEstado => idEstado.id)
+    @JoinColumn({name: "idEstado"})
+    estado: Estado;
 }

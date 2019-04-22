@@ -1,26 +1,30 @@
-import 'reflect-metadata';   //Diversos casos de uso (Composição / Injeção de Dependência, Asserções de Tipo de Tempo de Execução, Reflexão / Espelhamento, Teste) desejam a capacidade de adicionar metadados adicionais a uma classe de maneira consistente.
-import {createConnection, getConnection} from "typeorm";
+import "reflect-metadata";
+import { createConnection ,getConnection,Connection} from "typeorm";
 import { Estado } from "./entity/Estado";
 import { Loja } from "./entity/Loja";
 import { Cidade } from "./entity/Cidade";
 import db from "./config/db.json";
 
+
+const connection = createConnection({
+    type: "mysql",
+    host: db.host,
+    port: db.port,
+    username: db.user,
+    password: db.password,
+    database: db.database,
+    entities: [
+        Loja, Cidade, Estado
+    ],
+    synchronize: true,
+})
+
+
+
+
 export class DatabaseProject{
-
-
     insertEstado(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Estado, 
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             let estado = new Estado();
             estado.nome = body.nome;
             estado.sigla = body.sigla;
@@ -30,31 +34,27 @@ export class DatabaseProject{
                 .then(estado => {
                     res.status(200).send(estado);
                 })
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
 
         
     }
 
 
     insertLoja(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Loja
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             let loja = new Loja();
             loja.endereco = body.endereco;
             loja.telefone = body.telefone;
             loja.cnpj = body.cnpj;
             loja.horario = body.horario;
-            loja.idCidade = body.idCidade;
+            loja.cidade = body.idCidade;
             
             
             return connection.manager
@@ -62,26 +62,22 @@ export class DatabaseProject{
                 .then(loja => {
                     res.status(200).send(loja);
                 })
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
     }    
 
 
     insertCidade(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Cidade
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             let cidade = new Cidade();
             cidade.nome = body.nome;
-            cidade.idEstado = body.idEstado;
+            cidade.estado = body.idEstado;
             return connection.manager
                 .save(cidade)
                 .then(cidade => {
@@ -100,18 +96,7 @@ export class DatabaseProject{
 
 
     updateEstado(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Estado
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             return connection.manager
                 .createQueryBuilder()
                 .update(Estado)
@@ -135,18 +120,7 @@ export class DatabaseProject{
 
 
     updateCidade(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Cidade
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             return connection.manager
                 .createQueryBuilder()
                 .update(Cidade)
@@ -169,18 +143,7 @@ export class DatabaseProject{
 
 
     updateLoja(body:any, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Loja
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             return connection.manager
                 .createQueryBuilder()
                 .update(Loja)
@@ -189,7 +152,7 @@ export class DatabaseProject{
                     telefone: body.telefone,
                     cnpj: body.cnpj,
                     horario: body.horario,
-                    idCidade: body.idCidade
+                    cidade: body.idCidade
                 })
                 .where("id = :id", { id: body.id })
                 .execute()
@@ -207,18 +170,7 @@ export class DatabaseProject{
 
 
     deleteLoja(id:number, res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Loja
-            ],
-            synchronize: true,
-        }).then(async connection => {
+        connection.then(async connection => {
             return connection.manager
                 .createQueryBuilder()
                 .delete()
@@ -237,25 +189,99 @@ export class DatabaseProject{
     }
 
 
-    listaLojas(res:any):void {
-        createConnection({
-            type: "mysql",
-            host: db.host,
-            port: db.port,
-            username: db.user,
-            password: db.password,
-            database: db.database,
-            entities: [
-                Loja
-            ],
-            synchronize: true,
-        }).then(async connection => {
-            return connection.manager
-                                .createQueryBuilder()
-                                .select("*")
-                                .from(Loja, "loja")
-                                .execute()
-                                .catch(err => console.log(err));
+    listaLojaId(id:number, res:any){
+        connection.then(async connection => {
+            // const lojasPorId = await connection
+            //     .getRepository(Loja)
+            //     .createQueryBuilder("loja")
+            //     .where("id = :id", { id: id })
+            //     .getOne();
+
+            let lojas = connection.getRepository(Loja)
+            let lojasPorId = await lojas.findOne(id);
+
+            if(lojasPorId!= undefined){
+                console.log(JSON.stringify(lojasPorId));
+                res.send(lojasPorId);
+            } else{
+                res.send("Nenhuma loja encontrada")
+            }
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+    listaLojas(res:any) {
+        connection.then(async connection => {
+
+
+                let lojasAll = await connection.getRepository(Loja)
+                        .createQueryBuilder("loja")
+                        .getMany();
+                
+                if(lojasAll){
+                    console.log(JSON.stringify(lojasAll));
+                    res.send(lojasAll)
+                } else{
+                    res.send("Nenhuma loja encontrada")
+                }
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+    buscaPorEstado(id:any, res:any) {
+        connection.then(async connection => {
+                let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
+                                            .innerJoin("loja.cidade", "cidade")
+                                            .innerJoin("cidade.estado", "estado")
+                                            .where("estado.id = :id", { id: id })
+                                            .getMany();
+                                        
+                                            
+                if(lojasEstado){
+                    console.log(JSON.stringify(lojasEstado));
+                    res.send(lojasEstado)
+                } else{
+                    res.send("Nenhuma loja encontrada")
+                }
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+    buscaPorCidade(id:any, res:any) {
+        connection.then(async connection => {
+                let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
+                                            .innerJoin("loja.cidade", "cidade")
+                                            .where("cidade.id = :id", { id: id })
+                                            .getMany();
+                                        
+                                            
+                if(lojasEstado){
+                    console.log(JSON.stringify(lojasEstado));
+                    res.send(lojasEstado)
+                } else{
+                    res.send("Nenhuma loja encontrada")
+                }
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -266,6 +292,8 @@ export class DatabaseProject{
         });
     }
 }
+
+
 
 module.exports = function(){
     return DatabaseProject;

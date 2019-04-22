@@ -4,6 +4,29 @@ module.exports = function(app){
       res.send('OK.');
     });
 
+    app.get('/lojas/loja/:id', function(req, res){
+      var id = req.params.id;
+      let connection = new app.src.DatabaseProject();
+      connection.listaLojaId(id, res);
+    });
+
+
+    app.get('/lojas/loja/estado/:estado', function(req, res){
+      var estado = req.params.estado;
+      let connection = new app.src.DatabaseProject();
+      connection.buscaPorEstado(estado, res);
+    });
+
+    app.get('/lojas/loja/estado/cidade/:cidade', function(req, res){
+      var cidade = req.params.cidade;
+      let connection = new app.src.DatabaseProject();
+      connection.buscaPorCidade(cidade, res);
+    });
+
+    app.get('/lojas/loja/', function(req, res){
+      var connection = new app.src.DatabaseProject();
+      connection.listaLojas(res);
+    });
 
 
     app.post("/lojas/loja",function(req, res) {
@@ -25,25 +48,11 @@ module.exports = function(app){
     });
 
 
-
-
-    app.get('/lojas/loja/', function(req, res){
-      var connection = new app.src.DatabaseProject();
-      connection.listaLojas(res);   
-      // resultado(function(erro, resultado){  
-      //     if(erro){
-      //         console.log('erro ao consultar no banco: ' + erro);
-      //         res.status(500).send(erro);
-      //         return;
-      //     }
-          // console.log('Loja: '+ JSON.stringify(resultado));
-          // res.json(resultado);
-          // return;
-      // })
-      // console.log('consultando loja pelo id:' + id);
+    app.delete('/lojas/loja/:id', function(req, res){
+      var id = req.params.id;
+      let connection = new app.src.DatabaseProject();
+      connection.deleteLoja(id, res);
     });
-
-
 
 
     app.post("/lojas/estado",function(req, res) {
@@ -105,29 +114,9 @@ module.exports = function(app){
 
 
 
-    app.delete('/lojas/loja/:id', function(req, res){
-        var id = req.params.id;
-        var connection = new app.src.DatabaseProject();
-        connection.deleteLoja(id, res);
-    });
 
 
-    // app.get('/lojas/loja/:id', function(req, res){
-    //     var id = req.params.id;
-    //     var connection = app.persistencia.connectionFactory();
-    //     var lojaDao = new app.persistencia.LojaDao(connection);    
-    //     lojaDao.buscaPorId(id, function(erro, resultado){ 
-    //         if(erro){
-    //             console.log('erro ao consultar no banco: ' + erro);
-    //             res.status(500).send(erro);
-    //             return;
-    //         }
-    //         console.log('Loja: '+ JSON.stringify(resultado));
-    //         res.json(resultado);
-    //         return;
-    //     })
-    //     console.log('consultando loja pelo id:' + id);
-    // });
+
 
 
     // app.get('/lojas/loja/estado/:estado', function(req, res){
