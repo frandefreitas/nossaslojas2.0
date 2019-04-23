@@ -242,7 +242,7 @@ export class DatabaseProject{
     }
 
 
-    buscaPorEstado(id:any, res:any) {
+    buscaPorIdEstado(id:any, res:any) {
         connection.then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
@@ -296,13 +296,37 @@ export class DatabaseProject{
     }
 
 
-
-
-    buscaPorCidade(id:any, res:any) {
+    buscaPorIdCidade(id:any, res:any) {
         connection.then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
                                             .where("cidade.id = :id", { id: id })
+                                            .getMany();
+                                        
+                                            
+                if(lojasEstado){
+                    console.log(JSON.stringify(lojasEstado));
+                    res.send(lojasEstado)
+                } else{
+                    res.send("Nenhuma loja encontrada")
+                }
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+    buscaPorNomeCidade(estado: [], cidade: [], res:any) {
+        connection.then(async connection => {
+                let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
+                                            .innerJoin("loja.cidade", "cidade")
+                                            .innerJoin("cidade.estado", "estado")
+                                            .where("cidade.nome in (:cidade) or estado.nome in (:estado)", { cidade : cidade, estado : estado })
                                             .getMany();
                                         
                                             

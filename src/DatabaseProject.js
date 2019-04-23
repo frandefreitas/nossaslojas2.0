@@ -219,7 +219,7 @@ class DatabaseProject {
             console.log(error);
         });
     }
-    buscaPorEstado(id, res) {
+    buscaPorIdEstado(id, res) {
         connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
@@ -265,11 +265,34 @@ class DatabaseProject {
             console.log(error);
         });
     }
-    buscaPorCidade(id, res) {
+    buscaPorIdCidade(id, res) {
         connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
                 .where("cidade.id = :id", { id: id })
+                .getMany();
+            if (lojasEstado) {
+                console.log(JSON.stringify(lojasEstado));
+                res.send(lojasEstado);
+            }
+            else {
+                res.send("Nenhuma loja encontrada");
+            }
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
+    }
+    buscaPorNomeCidade(estado, cidade, res) {
+        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
+                .innerJoin("loja.cidade", "cidade")
+                .innerJoin("cidade.estado", "estado")
+                .where("cidade.nome in (:cidade) or estado.nome in (:estado)", { cidade: cidade, estado: estado })
                 .getMany();
             if (lojasEstado) {
                 console.log(JSON.stringify(lojasEstado));

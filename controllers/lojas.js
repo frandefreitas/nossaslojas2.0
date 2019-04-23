@@ -1,4 +1,5 @@
 module.exports = function(app){
+
     app.get('/lojas', function(req, res){
       console.log('Recebida requisicao de teste na porta 3000.')
       res.send('OK.');
@@ -14,7 +15,7 @@ module.exports = function(app){
     app.get('/lojas/loja/estado/:estado', function(req, res){
       var estado = req.params.estado;
       let connection = new app.src.DatabaseProject();
-      connection.buscaPorEstado(estado, res);
+      connection.buscaPorIdEstado(estado, res);
     });
 
 
@@ -27,10 +28,28 @@ module.exports = function(app){
       connection.buscaPorNomeEstado(estado, res);
     });
 
+
+    // {
+    //   "cidade":["Pelotas", "Canoas"],
+    //   "estado":["Rio Grande do Sul"]
+    // }  
+    app.post('/lojas/loja/estado/cidade', function(req, res){
+      var loja = req.body;
+      var cidade = loja.cidade;
+      var estado = loja.estado;
+      console.log(cidade);
+      console.log(estado);
+
+      let connection = new app.src.DatabaseProject();
+      connection.buscaPorNomeCidade(estado, cidade, res);
+    });
+
+
+
     app.get('/lojas/loja/estado/cidade/:cidade', function(req, res){
       var cidade = req.params.cidade;
       let connection = new app.src.DatabaseProject();
-      connection.buscaPorCidade(cidade, res);
+      connection.buscaPorIdCidade(cidade, res);
     });
 
     app.get('/lojas/loja/', function(req, res){
