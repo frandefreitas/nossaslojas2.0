@@ -84,13 +84,26 @@ module.exports = function(app){
     });
 
 
+    app.delete('/lojas/estado/:id', function(req, res){
+      var id = req.params.id;
+      let connection = new app.src.DatabaseProject();
+      connection.deleteEstado(id, res);
+    });
+
+
+    app.delete('/lojas/cidade/:id', function(req, res){
+      var id = req.params.id;
+      let connection = new app.src.DatabaseProject();
+      connection.deleteCidade(id, res);
+    });
+
+
     app.post("/lojas/estado",function(req, res) {
         var estado = req.body;
         console.log('Coletando estado');
         var connection = new app.src.DatabaseProject();
         connection.insertEstado(estado, res);
     });
-
 
     app.post("/lojas/cidade",function(req, res) {
       var cidade = req.body;

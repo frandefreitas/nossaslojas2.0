@@ -1,3 +1,4 @@
+
 # Projeto Node - API Nossas Lojas
 Repositório criado com o propósito de realizar um e-commerce "Minhas Lojas", sua documentação com Swagger, o SGDB MySQL e a tecnologia interpretadora de código JavaScript, Node.js.
 
@@ -88,10 +89,10 @@ Além do replace(), foi utilizando um while com indexOf('+') > -1 para passar por
 A quarta utilização do método GET foi consultando a cidade junto ao estado. Nesse exemplo foi usado como endereço '/lojas/loja/estado/:estado/:cidade', neste caso não precisou por '/cidade/' antes do parâmetro pois não existia função com endereço semelhante e GET.
  
  
- ### Método DELETE
+### Método DELETE
  O método DELETE foi utilizado para excluir da base de dados. A sua rota, além do nome do método HTTP, cita o endereço identico ao PUT e GET para buscar por id, enviando esse id colocando parâmetro para o LojaDao.
  
- ### Método PUT
+### Método PUT
  O método PUT foi utilizado para update da base de dados. A sua rota, além do nome do método HTTP, cita o endereço identico ao PUT e GET para buscar por id, enviando esse id colocando parâmetro para o LojaDao.
  
  
@@ -108,7 +109,7 @@ Foi separado a lojas em 3 tabelas: loja, cidade e estado. <br>
 Onde a loja tem uma chave estrangeira de cidade e cidade tem uma chave estrangeira de estado <br>.
 
 
- ##Criei um novo projeto com TypeORM
+## Criação um novo projeto com TypeORM
 Após criar as tabelas foi criado um projeto com TypeORM para usando os seguintes comandos. <br>
 
 npm init <br>
@@ -123,14 +124,17 @@ npm install typescript --save-de
  
  
  
- ##Criação dos modelos
+ ## Criação dos modelos
 Foi criado os seguintes modelos: Loja, Cidade e Estado. Após coloquei as chaves estrangeiras.
 
 
- ##Criação da DatabaseProject
+ ## Criação da DatabaseProject
 Foi ai onde fiz as funções de conexão com banco, simplifiquei ela pois utilizei em todas as consultas. Também fiz todas as consultas.
 
-##Otimização das rotas
+## Otimização das rotas
 Foi tirado de persistencia e colocado no DatabaseProject, no consign organizei isto também.
 
- 
+## Utilização do Jest
+A primeira atividade feita foi cria um arquivo install o pacote npm install --save-dev jest depois criei dois arquivos teste com uma função sum e o outro testando ele. <br>
+O arquivo com o teste tem um teste onde expect indica a função e o toBe a resposta esperada. <br>
+expect(sum(1, 2)).toBe(3);

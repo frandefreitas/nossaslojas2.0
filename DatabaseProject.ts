@@ -189,6 +189,49 @@ export class DatabaseProject{
     }
 
 
+
+    deleteCidade(id:number, res:any):void {
+        connection.then(async connection => {
+            return connection.manager
+                .createQueryBuilder()
+                .delete()
+                .from(Cidade)
+                .where("id = :id", { id: id })
+                .execute()
+                .catch(err => console.log(err));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+
+    deleteEstado(id:number, res:any):void {
+        connection.then(async connection => {
+            return connection.manager
+                .createQueryBuilder()
+                .delete()
+                .from(Estado)
+                .where("id = :id", { id: id })
+                .execute()
+                .catch(err => console.log(err));
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+    }
+
+
+
     listaLojaId(id:number, res:any){
         connection.then(async connection => {
             // const lojasPorId = await connection
