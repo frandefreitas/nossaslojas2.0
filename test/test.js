@@ -78,11 +78,71 @@ const request = require('supertest');
             });  
         
 
-        // request('localhost:3000').put('/lojas/estado/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
+        request('localhost:3000')
+            .put('/lojas/loja/49')
+            .send({
+                endereco:"Rua do Menino Ney",
+                telefone:"12345567",
+                cnpj: "12345678901234",
+                horario: "19:29",
+                idCidade: 5
+            })
+            .set('Accept', /application\/json/)
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
 
+
+
+        request('localhost:3000')
+            .put('/lojas/estado/30')
+            .send({
+                nome:"Rio Grande do Oeste",
+                sigla: "RO"
+            })
+            .set('Accept', /application\/json/)
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+
+
+
+        request('localhost:3000')
+            .put('/lojas/cidade/2')
+            .send({
+                nome:"Porto Norte"
+            })
+            .set('Accept', /application\/json/)
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+
+
+        request('localhost:3000')
+            .delete('/lojas/loja/63')
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+
+
+        request('localhost:3000')
+            .delete('/lojas/estado/24')
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+
+
+        request('localhost:3000')
+            .delete('/lojas/cidade/33')
+            .then((response) => {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
         // request('localhost:3000').put('/lojas/cidade/:id').then((response) => {
         //     expect(response.statusCode).toBe(200);
         //     done();
