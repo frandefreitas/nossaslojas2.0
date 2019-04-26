@@ -143,29 +143,4 @@ const request = require('supertest');
                 expect(response.statusCode).toBe(200);
                 done();
             });
-        // request('localhost:3000').put('/lojas/cidade/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-        
-        // request('localhost:3000').put('/lojas/loja/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-
-        // request('localhost:3000').delete('/lojas/estado/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-
-        // request('localhost:3000').delete('/lojas/cidade/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-        
-        // request('localhost:3000').delete('/lojas/loja/:id').then((response) => {
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-
     });
