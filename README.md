@@ -108,7 +108,7 @@ Foi separado a lojas em 3 tabelas: loja, cidade e estado. <br>
 Onde a loja tem uma chave estrangeira de cidade e cidade tem uma chave estrangeira de estado <br>.
 
 
-  ##Criei um novo projeto com TypeORM
+  ## Criei um novo projeto com TypeORM
 Após criar as tabelas foi criado um projeto com TypeORM para usando os seguintes comandos. <br>
 
  npm init <br>
@@ -123,18 +123,18 @@ Após criar as tabelas foi criado um projeto com TypeORM para usando os seguinte
 
 
 
-  ##Criação dos modelos
+  ## Criação dos modelos
 Foi criado os seguintes modelos: Loja, Cidade e Estado. Após coloquei as chaves estrangeiras.
 
 
-  ##Criação da DatabaseProject
+  ## Criação da DatabaseProject
 Foi ai onde fiz as funções de conexão com banco, simplifiquei ela pois utilizei em todas as consultas. Também fiz todas as consultas.
 
- ##Otimização das rotas
+ ## Otimização das rotas
 Foi tirado de persistencia e colocado no DatabaseProject, no consign organizei isto também.
 
 
-##Criação dos Containers 
+## Criação dos Containers 
 Foi criada primeira uma imagem para teste e subi ela para um container através do Dockerfile, mas depois foi criado um docker compose com a finalidade de pegar aquele dockerfile somado a image do Maria DB. <br>
 Uma peculariedade deste projeto é que foi necessário primeiro subir o banco "docker up db" entrar nele pelo comando docker exec -it projeto23_db bash, entre no banco dentro do container no mysql -p, criar a base de dados e popula para depois de tudo fazer o docker up na aplicação.
 <br>
