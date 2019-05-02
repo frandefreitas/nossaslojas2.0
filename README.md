@@ -133,3 +133,9 @@ Foi ai onde fiz as funções de conexão com banco, simplifiquei ela pois utiliz
  ##Otimização das rotas
 Foi tirado de persistencia e colocado no DatabaseProject, no consign organizei isto também.
 
+
+##Criação dos Containers 
+Foi criada primeira uma imagem para teste e subi ela para um container através do Dockerfile, mas depois foi criado um docker compose com a finalidade de pegar aquele dockerfile somado a image do Maria DB. <br>
+Uma peculariedade deste projeto é que foi necessário primeiro subir o banco "docker up db" entrar nele pelo comando docker exec -it projeto23_db bash, entre no banco dentro do container no mysql -p, criar a base de dados e popula para depois de tudo fazer o docker up na aplicação.
+<br>
+Outra curiosidade do projeto é que 
