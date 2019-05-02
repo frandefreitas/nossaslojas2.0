@@ -20,7 +20,7 @@ const db_json_1 = __importDefault(require("./config/db.json"));
 const connection = typeorm_1.createConnection({
     type: "mysql",
     host: db_json_1.default.host,
-    port: db_json_1.default.port,
+    port: 3306,
     username: db_json_1.default.user,
     password: db_json_1.default.password,
     database: db_json_1.default.database,

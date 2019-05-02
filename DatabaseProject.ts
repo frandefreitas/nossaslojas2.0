@@ -9,7 +9,7 @@ import db from "./config/db.json";
 const connection = createConnection({
     type: "mysql",
     host: db.host,
-    port: db.port,
+    port: 3306,
     username: db.user,
     password: db.password,
     database: db.database,

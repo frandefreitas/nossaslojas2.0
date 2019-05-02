@@ -1,8 +1,6 @@
 {
-    "host": "localhost",
-    "user": "root",
-    "password": "",
-    "username": "root",
-    "database": "projetonode",
-    "port": 3306
+    "host":"192.168.99.100",
+    "user":"root",
+    "password":"root",
+    "database":"projetonode"
 }
