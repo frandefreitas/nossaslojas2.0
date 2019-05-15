@@ -57,6 +57,17 @@ module.exports = function(app){
       connection.listaLojas(res);
     });
 
+    app.get('/lojas/cidade/', function(req, res){
+      var connection = new app.src.DatabaseProject();
+      connection.listaCidades(res);
+    });
+
+
+    app.get('/lojas/estado/', function(req, res){
+      var connection = new app.src.DatabaseProject();
+      connection.listaEstados(res);
+    });
+
 
     app.post("/lojas/loja",function(req, res) {
       var loja = req.body;

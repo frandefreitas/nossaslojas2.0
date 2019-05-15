@@ -31,7 +31,18 @@ const connection = typeorm_1.createConnection({
 });
 class DatabaseProject {
     insertEstado(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let estado = new Estado_1.Estado();
             estado.nome = body.nome;
             estado.sigla = body.sigla;
@@ -39,6 +50,7 @@ class DatabaseProject {
                 .save(estado)
                 .then(estado => {
                 res.status(200).send(estado);
+                connection.close();
             });
         })).catch(error => {
             let errResp = {
@@ -50,7 +62,18 @@ class DatabaseProject {
         });
     }
     insertLoja(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let loja = new Loja_1.Loja();
             loja.endereco = body.endereco;
             loja.telefone = body.telefone;
@@ -61,6 +84,7 @@ class DatabaseProject {
                 .save(loja)
                 .then(loja => {
                 res.status(200).send(loja);
+                connection.close();
             });
         })).catch(error => {
             let errResp = {
@@ -72,7 +96,18 @@ class DatabaseProject {
         });
     }
     insertCidade(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let cidade = new Cidade_1.Cidade();
             cidade.nome = body.nome;
             cidade.estado = body.idEstado;
@@ -80,6 +115,7 @@ class DatabaseProject {
                 .save(cidade)
                 .then(cidade => {
                 res.status(200).send(cidade);
+                connection.close();
             });
         })).catch(error => {
             let errResp = {
@@ -91,17 +127,25 @@ class DatabaseProject {
         });
     }
     updateEstado(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Estado_1.Estado)
-                .set({
-                nome: body.nome,
-                sigla: body.sigla
-            })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let estadoFull = connection.getRepository(Estado_1.Estado);
+            let estadoColetada = yield estadoFull.findOne(body.id);
+            estadoColetada.nome = body.nome;
+            estadoColetada.sigla = body.sigla;
+            yield estadoFull.save(estadoColetada);
+            res.status(200).send(estadoColetada);
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -112,16 +156,24 @@ class DatabaseProject {
         });
     }
     updateCidade(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Cidade_1.Cidade)
-                .set({
-                nome: body.nome
-            })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let cidadeFull = connection.getRepository(Cidade_1.Cidade);
+            let cidadeColetada = yield cidadeFull.findOne(body.id);
+            cidadeColetada.nome = body.nome;
+            yield cidadeFull.save(cidadeColetada);
+            res.status(200).send(cidadeColetada);
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -132,20 +184,29 @@ class DatabaseProject {
         });
     }
     updateLoja(body, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Loja_1.Loja)
-                .set({
-                endereco: body.endereco,
-                telefone: body.telefone,
-                cnpj: body.cnpj,
-                horario: body.horario,
-                cidade: body.idCidade
-            })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let lojaFull = connection.getRepository(Loja_1.Loja);
+            let lojaColetada = yield lojaFull.findOne(body.id);
+            lojaColetada.endereco = body.endereco;
+            lojaColetada.telefone = body.telefone;
+            lojaColetada.cnpj = body.cnpj;
+            lojaColetada.horario = body.horario;
+            lojaColetada.cidade = body.cidade;
+            yield lojaFull.save(lojaColetada);
+            console.log("Loja atualizada com sucesso");
+            res.status(200).send(lojaColetada);
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -156,61 +217,99 @@ class DatabaseProject {
         });
     }
     deleteLoja(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Loja_1.Loja)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let lojaFull = connection.getRepository(Loja_1.Loja);
+            let lojaColetada = yield lojaFull.findOne(id);
+            yield lojaFull.remove(lojaColetada);
+            res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
         })).catch(error => {
-            let errResp = {
+            let saidaErro = {
                 "errorCode": "400",
-                "msg": 'Falha no banco'
+                "msg": 'Error connect to database'
             };
-            res.status(400).send(errResp);
+            res.status(400).send(saidaErro);
             console.log(error);
         });
     }
     deleteCidade(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Cidade_1.Cidade)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let cidadeFull = connection.getRepository(Cidade_1.Cidade);
+            let cidadeColetada = yield cidadeFull.findOne(id);
+            yield cidadeFull.remove(cidadeColetada);
+            res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
         })).catch(error => {
-            let errResp = {
+            let saidaErro = {
                 "errorCode": "400",
-                "msg": 'Falha no banco'
+                "msg": 'Error connect to database'
             };
-            res.status(400).send(errResp);
+            res.status(400).send(saidaErro);
             console.log(error);
         });
     }
     deleteEstado(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Estado_1.Estado)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let estadoFull = connection.getRepository(Estado_1.Estado);
+            let estadoColetada = yield estadoFull.findOne(id);
+            yield estadoFull.remove(estadoColetada);
+            res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
         })).catch(error => {
-            let errResp = {
+            let saidaErro = {
                 "errorCode": "400",
-                "msg": 'Falha no banco'
+                "msg": 'Error connect to database'
             };
-            res.status(400).send(errResp);
+            res.status(400).send(saidaErro);
             console.log(error);
         });
     }
     listaLojaId(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             // const lojasPorId = await connection
             //     .getRepository(Loja)
             //     .createQueryBuilder("loja")
@@ -225,6 +324,7 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -235,7 +335,18 @@ class DatabaseProject {
         });
     }
     listaLojas(res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasAll = yield connection.getRepository(Loja_1.Loja)
                 .createQueryBuilder("loja")
                 .getMany();
@@ -246,6 +357,73 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
+    }
+    listaCidades(res) {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let cidadesAll = yield connection.getRepository(Cidade_1.Cidade)
+                .createQueryBuilder("cidade")
+                .getMany();
+            if (cidadesAll) {
+                console.log(JSON.stringify(cidadesAll));
+                res.send(cidadesAll);
+            }
+            else {
+                res.send("Nenhuma cidade encontrada");
+            }
+            connection.close();
+        })).catch(error => {
+            let errResp = {
+                "errorCode": "400",
+                "msg": 'Falha no banco'
+            };
+            res.status(400).send(errResp);
+            console.log(error);
+        });
+    }
+    listaEstados(res) {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
+            let estadosAll = yield connection.getRepository(Estado_1.Estado)
+                .createQueryBuilder("estado")
+                .getMany();
+            if (estadosAll) {
+                console.log(JSON.stringify(estadosAll));
+                res.send(estadosAll);
+            }
+            else {
+                res.send("Nenhuma cidade encontrada");
+            }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -256,7 +434,18 @@ class DatabaseProject {
         });
     }
     buscaPorIdEstado(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
                 .innerJoin("cidade.estado", "estado")
@@ -269,6 +458,7 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -279,7 +469,18 @@ class DatabaseProject {
         });
     }
     buscaPorNomeEstado(nome, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
                 .innerJoin("cidade.estado", "estado")
@@ -292,6 +493,7 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -302,7 +504,18 @@ class DatabaseProject {
         });
     }
     buscaPorIdCidade(id, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
                 .where("cidade.id = :id", { id: id })
@@ -314,6 +527,7 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",
@@ -324,7 +538,18 @@ class DatabaseProject {
         });
     }
     buscaPorNomeCidade(estado, cidade, res) {
-        connection.then((connection) => __awaiter(this, void 0, void 0, function* () {
+        typeorm_1.createConnection({
+            type: "mysql",
+            host: db_json_1.default.host,
+            port: 3306,
+            username: db_json_1.default.user,
+            password: db_json_1.default.password,
+            database: db_json_1.default.database,
+            entities: [
+                Loja_1.Loja, Cidade_1.Cidade, Estado_1.Estado
+            ],
+            synchronize: true,
+        }).then((connection) => __awaiter(this, void 0, void 0, function* () {
             let lojasEstado = yield connection.createQueryBuilder(Loja_1.Loja, "loja")
                 .innerJoin("loja.cidade", "cidade")
                 .innerJoin("cidade.estado", "estado")
@@ -337,6 +562,7 @@ class DatabaseProject {
             else {
                 res.send("Nenhuma loja encontrada");
             }
+            connection.close();
         })).catch(error => {
             let errResp = {
                 "errorCode": "400",

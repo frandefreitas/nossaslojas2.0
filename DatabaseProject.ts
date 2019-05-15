@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import "reflect-metadata"
 import { createConnection ,getConnection,Connection} from "typeorm";
 import { Estado } from "./entity/Estado";
 import { Loja } from "./entity/Loja";
@@ -24,7 +24,18 @@ const connection = createConnection({
 
 export class DatabaseProject{
     insertEstado(body:any, res:any):void {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
             let estado = new Estado();
             estado.nome = body.nome;
             estado.sigla = body.sigla;
@@ -33,6 +44,7 @@ export class DatabaseProject{
                 .save(estado)
                 .then(estado => {
                     res.status(200).send(estado);
+                    connection.close();
                 })
         }).catch(error => {
             let errResp = {
@@ -48,7 +60,18 @@ export class DatabaseProject{
 
 
     insertLoja(body:any, res:any):void {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
             let loja = new Loja();
             loja.endereco = body.endereco;
             loja.telefone = body.telefone;
@@ -61,6 +84,7 @@ export class DatabaseProject{
                 .save(loja)
                 .then(loja => {
                     res.status(200).send(loja);
+                    connection.close();
                 })
         }).catch(error => {
             let errResp = {
@@ -74,7 +98,18 @@ export class DatabaseProject{
 
 
     insertCidade(body:any, res:any):void {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
             let cidade = new Cidade();
             cidade.nome = body.nome;
             cidade.estado = body.idEstado;
@@ -82,6 +117,7 @@ export class DatabaseProject{
                 .save(cidade)
                 .then(cidade => {
                     res.status(200).send(cidade);
+                    connection.close();
                 })
         }).catch(error => {
             let errResp = {
@@ -96,18 +132,26 @@ export class DatabaseProject{
 
 
     updateEstado(body:any, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Estado)
-                .set({ 
-                    nome: body.nome, 
-                    sigla: body.sigla
-                })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
-        }).catch(error => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+            let estadoFull = connection.getRepository(Estado);
+            let estadoColetada = await estadoFull.findOne(body.id); 
+            estadoColetada.nome = body.nome;
+            estadoColetada.sigla = body.sigla;       
+            await estadoFull.save(estadoColetada);            
+            res.status(200).send(estadoColetada);
+            connection.close();
+            }).catch(error => {
             let errResp = {
                 "errorCode":"400",
                 "msg": 'Falha no banco'
@@ -120,17 +164,25 @@ export class DatabaseProject{
 
 
     updateCidade(body:any, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Cidade)
-                .set({ 
-                    nome: body.nome
-                })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
-        }).catch(error => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+            let cidadeFull = connection.getRepository(Cidade);
+            let cidadeColetada = await cidadeFull.findOne(body.id); 
+            cidadeColetada.nome = body.nome;           
+            await cidadeFull.save(cidadeColetada);            
+            res.status(200).send(cidadeColetada);
+            connection.close();
+            }).catch(error => {
             let errResp = {
                 "errorCode":"400",
                 "msg": 'Falha no banco'
@@ -143,20 +195,31 @@ export class DatabaseProject{
 
 
     updateLoja(body:any, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .update(Loja)
-                .set({ 
-                    endereco: body.endereco,
-                    telefone: body.telefone,
-                    cnpj: body.cnpj,
-                    horario: body.horario,
-                    cidade: body.idCidade
-                })
-                .where("id = :id", { id: body.id })
-                .execute()
-                .catch(err => console.log(err));
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then( async connection => {
+            let lojaFull = connection.getRepository(Loja);
+            let lojaColetada = await lojaFull.findOne(body.id);            
+            lojaColetada.endereco = body.endereco;
+            lojaColetada.telefone = body.telefone;
+            lojaColetada.cnpj = body.cnpj;
+            lojaColetada.horario = body.horario;
+            lojaColetada.cidade = body.cidade;
+            await lojaFull.save(lojaColetada);
+            
+            console.log("Loja atualizada com sucesso");
+            res.status(200).send(lojaColetada);
+            connection.close();
+            
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -165,75 +228,120 @@ export class DatabaseProject{
             res.status(400).send(errResp);
             console.log(error);         
         });
+        
     }
 
 
 
     deleteLoja(id:number, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Loja)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+            
+            let lojaFull = connection.getRepository(Loja);
+            let lojaColetada = await lojaFull.findOne(id);
+                await lojaFull.remove(lojaColetada);
+                res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
+
         }).catch(error => {
-            let errResp = {
-                "errorCode":"400",
-                "msg": 'Falha no banco'
-            }         
-            res.status(400).send(errResp);
-            console.log(error);         
-        });
+                let saidaErro = {
+                    "errorCode":"400",
+                    "msg": 'Error connect to database'
+                }         
+                res.status(400).send(saidaErro);
+                console.log(error);
+        })
     }
 
 
 
     deleteCidade(id:number, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Cidade)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+            
+            let cidadeFull = connection.getRepository(Cidade);
+            let cidadeColetada = await cidadeFull.findOne(id);
+                await cidadeFull.remove(cidadeColetada);
+                res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
+
         }).catch(error => {
-            let errResp = {
-                "errorCode":"400",
-                "msg": 'Falha no banco'
-            }         
-            res.status(400).send(errResp);
-            console.log(error);         
-        });
+                let saidaErro = {
+                    "errorCode":"400",
+                    "msg": 'Error connect to database'
+                }         
+                res.status(400).send(saidaErro);
+                console.log(error);
+        })
     }
 
 
 
     deleteEstado(id:number, res:any):void {
-        connection.then(async connection => {
-            return connection.manager
-                .createQueryBuilder()
-                .delete()
-                .from(Estado)
-                .where("id = :id", { id: id })
-                .execute()
-                .catch(err => console.log(err));
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+            
+            let estadoFull = connection.getRepository(Estado);
+            let estadoColetada = await estadoFull.findOne(id);
+                await estadoFull.remove(estadoColetada);
+                res.status(200).send("Loja excluida com sucesso: " + id);
+            connection.close();
+
         }).catch(error => {
-            let errResp = {
-                "errorCode":"400",
-                "msg": 'Falha no banco'
-            }         
-            res.status(400).send(errResp);
-            console.log(error);         
-        });
+                let saidaErro = {
+                    "errorCode":"400",
+                    "msg": 'Error connect to database'
+                }         
+                res.status(400).send(saidaErro);
+                console.log(error);
+        })
     }
 
 
 
     listaLojaId(id:number, res:any){
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
             // const lojasPorId = await connection
             //     .getRepository(Loja)
             //     .createQueryBuilder("loja")
@@ -249,6 +357,7 @@ export class DatabaseProject{
             } else{
                 res.send("Nenhuma loja encontrada")
             }
+            connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -261,7 +370,18 @@ export class DatabaseProject{
 
 
     listaLojas(res:any) {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
 
 
                 let lojasAll = await connection.getRepository(Loja)
@@ -274,6 +394,7 @@ export class DatabaseProject{
                 } else{
                     res.send("Nenhuma loja encontrada")
                 }
+            connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -282,11 +403,100 @@ export class DatabaseProject{
             res.status(400).send(errResp);
             console.log(error);         
         });
+
+    }
+
+
+
+    listaCidades(res:any) {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+
+
+                let cidadesAll = await connection.getRepository(Cidade)
+                        .createQueryBuilder("cidade")
+                        .getMany();
+                
+                if(cidadesAll){
+                    console.log(JSON.stringify(cidadesAll));
+                    res.send(cidadesAll)
+                } else{
+                    res.send("Nenhuma cidade encontrada")
+                }
+            connection.close();
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+
+    }
+
+
+    listaEstados(res:any) {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
+
+
+                let estadosAll = await connection.getRepository(Estado)
+                        .createQueryBuilder("estado")
+                        .getMany();
+                
+                if(estadosAll){
+                    console.log(JSON.stringify(estadosAll));
+                    res.send(estadosAll)
+                } else{
+                    res.send("Nenhuma cidade encontrada")
+                }
+            connection.close();
+        }).catch(error => {
+            let errResp = {
+                "errorCode":"400",
+                "msg": 'Falha no banco'
+            }         
+            res.status(400).send(errResp);
+            console.log(error);         
+        });
+
     }
 
 
     buscaPorIdEstado(id:any, res:any) {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
                                             .innerJoin("cidade.estado", "estado")
@@ -300,6 +510,7 @@ export class DatabaseProject{
                 } else{
                     res.send("Nenhuma loja encontrada")
                 }
+                connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -314,7 +525,18 @@ export class DatabaseProject{
 
 
     buscaPorNomeEstado(nome:string, res:any) {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
                                             .innerJoin("cidade.estado", "estado")
@@ -328,6 +550,7 @@ export class DatabaseProject{
                 } else{
                     res.send("Nenhuma loja encontrada")
                 }
+                connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -340,7 +563,18 @@ export class DatabaseProject{
 
 
     buscaPorIdCidade(id:any, res:any) {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
                                             .where("cidade.id = :id", { id: id })
@@ -353,6 +587,7 @@ export class DatabaseProject{
                 } else{
                     res.send("Nenhuma loja encontrada")
                 }
+                connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",
@@ -365,7 +600,18 @@ export class DatabaseProject{
 
 
     buscaPorNomeCidade(estado: [], cidade: [], res:any) {
-        connection.then(async connection => {
+        createConnection({
+            type: "mysql",
+            host: db.host,
+            port: 3306,
+            username: db.user,
+            password: db.password,
+            database: db.database,
+            entities: [
+                Loja, Cidade, Estado
+            ],
+            synchronize: true,
+        }).then(async connection => {
                 let lojasEstado = await connection.createQueryBuilder(Loja, "loja")
                                             .innerJoin("loja.cidade", "cidade")
                                             .innerJoin("cidade.estado", "estado")
@@ -379,6 +625,7 @@ export class DatabaseProject{
                 } else{
                     res.send("Nenhuma loja encontrada")
                 }
+                connection.close();
         }).catch(error => {
             let errResp = {
                 "errorCode":"400",

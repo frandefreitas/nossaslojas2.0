@@ -1,6 +1,6 @@
 {
-    "host":"192.168.99.100",
-    "user":"root",
-    "password":"root",
-    "database":"projetonode"
+    "host": "192.168.99.100",
+    "user": "root",
+    "password": "root",
+    "database": "projetonode"
 }

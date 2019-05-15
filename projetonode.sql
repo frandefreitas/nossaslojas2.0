@@ -22,11 +22,15 @@ SET time_zone = "+00:00";
 -- Database: `projetonode`
 --
 
+
+
 -- --------------------------------------------------------
 
 --
 -- Estrutura da tabela `cidade`
 --
+
+USE projetonode;
 
 CREATE TABLE `cidade` (
   `id` int(11) NOT NULL,

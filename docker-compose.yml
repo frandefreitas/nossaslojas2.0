@@ -2,19 +2,19 @@ version: '3'
 
 services:
   db:
-    image: mariadb    
+    build: 
+      dockerfile: ./docker/db/Dockerfile
+      context: .
+    image: 46163131231233/banco26
+    container_name: banco26
     ports:
       - "3306:3306"
-    volumes:
-      - /home/node/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root     
     networks: 
       - rede
   
   app:
     build: 
-      dockerfile: Dockerfile
+      dockerfile: ./docker/app/Dockerfile
       context: .
     image: 46163131231233/projeto26 
     container_name: projeto26
@@ -22,6 +22,10 @@ services:
       - "3000:3000"
     networks: 
       - rede
+    depends_on:
+      - db
+    links:
+      - db
       
 networks: 
   rede:
